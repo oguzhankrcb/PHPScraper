@@ -582,4 +582,22 @@ trait UsesContent
 
         return $result;
     }
+
+    /**
+     * Get all blockquotes on the page
+     */
+    public function blockQuotes(): array
+    {
+        // Generate a list of all blockquote entries
+        $result = [];
+
+        /** @var array<\DOMElement> $blockQuotes */
+        $blockQuotes = $this->filter('//blockquote');
+
+        foreach ($blockQuotes as $blockQuote) {
+            $result[] = $blockQuote->getAttribute('text');
+        }
+
+        return $result;
+    }
 }
