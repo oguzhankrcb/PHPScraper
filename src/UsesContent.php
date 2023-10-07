@@ -553,9 +553,18 @@ trait UsesContent
 
         foreach ($images as $image) {
             // Collect the URL and commonly interesting attributes
+            if (
+                str_starts_with($image->getAttribute('data-src'), 'https://') &&
+                str_starts_with($image->getAttribute('src'), 'data:image/svg+xml')
+            ) {
+                $imageURL = $image->getAttribute('data-src');
+            } else {
+                $imageURL = (new DomCrawlerImage($image, $this->currentBaseHost()))->getUri();
+            }
+
             $result[] = [
                 // Re-generate the proper uri using the Symfony's image class
-                'url' => (new DomCrawlerImage($image, $this->currentBaseHost()))->getUri(),
+                'url' => $imageURL,
                 'alt' => $image->getAttribute('alt'),
                 'width' => $image->getAttribute('width') === '' ? null : $image->getAttribute('width'),
                 'height' => $image->getAttribute('height') === '' ? null : $image->getAttribute('height'),
