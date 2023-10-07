@@ -4,6 +4,7 @@ namespace Spekulatius\PHPScraper;
 
 use DonatelloZa\RakePlus\RakePlus;
 use League\Uri\Uri;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Image as DomCrawlerImage;
 use Symfony\Component\DomCrawler\Link as DomCrawlerLink;
 
@@ -596,6 +597,31 @@ trait UsesContent
 
         foreach ($blockQuotes as $blockQuote) {
             $result[] = $blockQuote->textContent;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get all video players on the page
+     */
+    public function videoPlayers(): array
+    {
+        $result = [];
+
+        $withoutIframe = $this->filter('//video');
+        $youtubeIframes = $this->filter('//iframe[contains(@src, "youtube")]');
+        $vimeoIframes = $this->filter('//iframe[contains(@src, "vimeo")]');
+        $dailyMotion = $this->filter('//iframe[contains(@src, "dailymotion")]');
+
+        /** @var array<Crawler> $allVideoPlayers */
+        $allVideoFilters = [$withoutIframe, $youtubeIframes, $vimeoIframes, $dailyMotion];
+
+        foreach ($allVideoFilters as $videoFilter) {
+            foreach ($videoFilter as $videoPlayer)
+            {
+                $result[] = $videoPlayer->getAttribute('src');
+            }
         }
 
         return $result;
