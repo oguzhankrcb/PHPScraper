@@ -534,7 +534,16 @@ trait UsesContent
 
         /** @var \Symfony\Component\DomCrawler\Image $image */
         foreach ($images as $image) {
-            $result[] = $image->getUri();
+            if (
+                str_starts_with($image->getNode()->getAttribute('data-src'), 'https://') &&
+                str_starts_with($image->getNode()->getAttribute('src'), 'data:image/svg+xml')
+            ) {
+                $imageURL = $image->getNode()->getAttribute('data-src');
+            } else {
+                $imageURL = $image->getUri();
+            }
+
+            $result[] = $imageURL;
         }
 
         return $result;
