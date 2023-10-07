@@ -595,7 +595,7 @@ trait UsesContent
         $blockQuotes = $this->filter('//blockquote');
 
         foreach ($blockQuotes as $blockQuote) {
-            $result[] = $blockQuote->getAttribute('text');
+            $result[] = $blockQuote->textContent;
         }
 
         return $result;
