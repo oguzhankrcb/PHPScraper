@@ -646,4 +646,43 @@ trait UsesContent
 
         return count($segments);
     }
+
+    /**
+     * Get most common triplets on the page
+     */
+    public function findMostCommonTriplets(): array
+    {
+        $content = implode(' ', $this->cleanOutlineWithParagraphs(onlyContent: true));
+        $triplets = [];
+        $excludedStrings = ['Read More'];
+
+        preg_match_all('/[^.!?]*[.!?]/', $content, $matches);
+        $sentences = $matches[0];
+
+        foreach ($sentences as $sentence) {
+            foreach ($excludedStrings as $exclude) {
+                $sentence = str_replace($exclude, '', $sentence);
+            }
+
+            $cleanedSentence = preg_replace("/[\r\n]+/", " ", $sentence);
+            $words = preg_split('/\s+/', trim($cleanedSentence));
+
+            for ($i = 0; $i < count($words) - 2; $i++) {
+                $triplet = $words[$i] . ' ' . $words[$i + 1] . ' ' . $words[$i + 2];
+                $triplets[$triplet] = ($triplets[$triplet] ?? 0) + 1;
+            }
+        }
+
+        arsort($triplets);
+        $maxCount = reset($triplets);
+
+        $results = [];
+        foreach ($triplets as $triplet => $count) {
+            if ($count == $maxCount) {
+                $results[] = ["triplet" => $triplet, "count" => $count];
+            }
+        }
+
+        return $results;
+    }
 }
