@@ -300,25 +300,26 @@ trait UsesContent
     public function cleanOutlineWithParagraphs(bool $onlyContent = false): array
     {
         $elementsNameAndText = $this->filterExtractAttributes('//h1|//h2|//h3|//h4|//h5|//h6|//p', ['_name', '_text']);
+        $result = [];
 
         /** @var array<string> $nameAndText */
         foreach ($elementsNameAndText as $index => $nameAndText) {
             // Element has no text.
-            if ($nameAndText[1] === '') {
+            if (empty(trim($nameAndText[1]))) {
                 continue;
             }
 
             if ($onlyContent) {
-                $elementsNameAndText[$index] = trim($nameAndText[1]);
+                $result[$index] = trim($nameAndText[1]);
             } else {
-                $elementsNameAndText[$index] = [
+                $result[$index] = [
                     'tag' => $nameAndText[0],
                     'content' => trim($nameAndText[1]),
                 ];
             }
         }
 
-        return $elementsNameAndText;
+        return $result;
     }
 
     /**
