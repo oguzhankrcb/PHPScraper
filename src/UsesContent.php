@@ -297,7 +297,7 @@ trait UsesContent
     /**
      * Parses the content outline of the web-page
      */
-    public function cleanOutlineWithParagraphs(): array
+    public function cleanOutlineWithParagraphs(bool $onlyContent = false): array
     {
         $elementsNameAndText = $this->filterExtractAttributes('//h1|//h2|//h3|//h4|//h5|//h6|//p', ['_name', '_text']);
 
@@ -308,10 +308,14 @@ trait UsesContent
                 continue;
             }
 
-            $elementsNameAndText[$index] = [
-                'tag' => $nameAndText[0],
-                'content' => trim($nameAndText[1]),
-            ];
+            if ($onlyContent) {
+                $elementsNameAndText[$index] = trim($nameAndText[1]);
+            } else {
+                $elementsNameAndText[$index] = [
+                    'tag' => $nameAndText[0],
+                    'content' => trim($nameAndText[1]),
+                ];
+            }
         }
 
         return $elementsNameAndText;
