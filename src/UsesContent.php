@@ -685,4 +685,43 @@ trait UsesContent
 
         return $results;
     }
+
+    /**
+     * Get most common duplets on the page
+     */
+    public function mostCommonDuplets(): array
+    {
+        $content = implode(' ', $this->cleanOutlineWithParagraphs(onlyContent: true));
+        $duplets = [];
+        $excludedStrings = ['Read More'];
+
+        preg_match_all('/[^.!?]*[.!?]/', $content, $matches);
+        $sentences = $matches[0];
+
+        foreach ($sentences as $sentence) {
+            foreach ($excludedStrings as $exclude) {
+                $sentence = str_replace($exclude, '', $sentence);
+            }
+
+            $cleanedSentence = preg_replace("/[\r\n]+/", " ", $sentence);
+            $words = preg_split('/\s+/', trim($cleanedSentence));
+
+            for ($i = 0; $i < count($words) - 1; $i++) {
+                $duplet = $words[$i] . ' ' . $words[$i + 1];
+                $duplets[$duplet] = ($duplets[$duplet] ?? 0) + 1;
+            }
+        }
+
+        arsort($duplets);
+        $maxCount = reset($duplets);
+
+        $results = [];
+        foreach ($duplets as $duplet => $count) {
+            if ($count == $maxCount) {
+                $results[] = ["duplet" => $duplet, "count" => $count];
+            }
+        }
+
+        return $results;
+    }
 }
