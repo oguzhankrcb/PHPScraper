@@ -626,4 +626,19 @@ trait UsesContent
 
         return $result;
     }
+
+    /**
+     * Get question marks count on the page
+     */
+    public function questionMarksCount(): int
+    {
+        $content = implode(' ', $this->prepContent());
+        $segments = explode('?', $content);
+
+        if (! str_ends_with(trim($content), '?')) {
+            array_pop($segments);
+        }
+
+        return count($segments);
+    }
 }
