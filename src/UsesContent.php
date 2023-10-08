@@ -636,7 +636,7 @@ trait UsesContent
      */
     public function questionMarksCount(): int
     {
-        $content = implode(' ', $this->prepContent());
+        $content = implode(' ', $this->cleanOutlineWithParagraphs(onlyContent: true));
         $segments = explode('?', $content);
 
         if (! str_ends_with(trim($content), '?')) {
