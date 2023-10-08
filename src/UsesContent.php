@@ -650,7 +650,7 @@ trait UsesContent
     /**
      * Get most common triplets on the page
      */
-    public function findMostCommonTriplets(): array
+    public function mostCommonTriplets(): array
     {
         $content = implode(' ', $this->cleanOutlineWithParagraphs(onlyContent: true));
         $triplets = [];
