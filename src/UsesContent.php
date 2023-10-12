@@ -323,6 +323,34 @@ trait UsesContent
     }
 
     /**
+     * Parses the content outline of the web-page as string
+     */
+    public function cleanOutlineWithParagraphsAsString(bool $onlyContent = false): string
+    {
+        $elementsNameAndText = $this->filterExtractAttributes('//h1|//h2|//h3|//h4|//h5|//h6|//p', ['_name', '_text']);
+        $result = [];
+
+        /** @var array<string> $nameAndText */
+        foreach ($elementsNameAndText as $index => $nameAndText) {
+            // Element has no text.
+            if (empty(trim($nameAndText[1]))) {
+                continue;
+            }
+
+            if ($onlyContent) {
+                $result[$index] = trim($nameAndText[1]);
+            } else {
+                $result[$index] = [
+                    'tag' => $nameAndText[0],
+                    'content' => trim($nameAndText[1]),
+                ];
+            }
+        }
+
+        return implode(' ', $result);
+    }
+
+    /**
      * Internal method to prepare the content for keyword analysis
      *  done in the called methods for the rake analysis
      *
