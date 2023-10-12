@@ -665,7 +665,7 @@ trait UsesContent
      */
     public function questionMarksCount(): int
     {
-        $content = implode(' ', $this->cleanOutlineWithParagraphs(onlyContent: true));
+        $content = implode(' ', $this->cleanOutlineWithParagraphsAsString(onlyContent: true));
         $segments = explode('?', $content);
 
         if (! str_ends_with(trim($content), '?')) {
@@ -680,7 +680,7 @@ trait UsesContent
      */
     public function mostCommonTriplets(): array
     {
-        $content = implode(' ', $this->cleanOutlineWithParagraphs(onlyContent: true));
+        $content = implode(' ', $this->cleanOutlineWithParagraphsAsString(onlyContent: true));
         $triplets = [];
         $excludedStrings = ['Read More'];
 
@@ -719,7 +719,7 @@ trait UsesContent
      */
     public function mostCommonDuplets(): array
     {
-        $content = implode(' ', $this->cleanOutlineWithParagraphs(onlyContent: true));
+        $content = implode(' ', $this->cleanOutlineWithParagraphsAsString(onlyContent: true));
         $duplets = [];
         $excludedStrings = ['Read More'];
 
